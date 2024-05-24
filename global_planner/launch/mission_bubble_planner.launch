@@ -1,0 +1,13 @@
+<launch>
+  <!-- Launches a global planner for hydra-->
+  <node pkg="global_planner" name="global_planner" type="hydra_front_end" output="screen" >
+    <rosparam command="load" file="$(find global_planner)/config/hydra_front_end.yaml" />
+    <!-- input topics -->
+    <remap from="/grid_map/pose" to="/drone0/mavros/local_position/pose"/>
+    <remap from="/grid_map/cloud" to="/drone0/camera/depth/points"/>
+    <!-- output topics -->
+    <remap from="/grid_map/occupancy" to="/grid_map/occupancy"/>
+    <remap from="/plan_viz" to="/plan_viz"/>
+  </node>
+
+</launch>
