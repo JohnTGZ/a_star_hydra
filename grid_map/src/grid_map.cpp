@@ -169,7 +169,7 @@ void GridMap::reset(const double& resolution){
 
   global_map_in_origin_.reset(new pcl::PointCloud<pcl::PointXYZ>());
 
-  md_.last_sensor_msg_time = ros::Time::now().toSec();
+  md_.last_pose_msg_time = ros::Time::now().toSec();
 
   // Camera to body transform
   md_.cam2body_.block<3, 3>(0, 0) =  (Eigen::AngleAxisd((M_PI/180.0) * md_.cam2body_rpy_deg(2), Eigen::Vector3d::UnitZ())
@@ -251,7 +251,6 @@ void GridMap::cloudOdomCB( const sensor_msgs::PointCloud2ConstPtr &msg_pc,
 {
   getCamToGlobalPose(msg_odom->pose.pose);
   pcdMsgToMap(*msg_pc);
-  md_.last_sensor_msg_time = ros::Time::now().toSec();
 }
 
 void GridMap::cloudPoseCB( const sensor_msgs::PointCloud2ConstPtr &msg_pc,
@@ -259,7 +258,6 @@ void GridMap::cloudPoseCB( const sensor_msgs::PointCloud2ConstPtr &msg_pc,
 {
   getCamToGlobalPose(msg_pose->pose);
   pcdMsgToMap(*msg_pc);
-  md_.last_sensor_msg_time = ros::Time::now().toSec();
 }
 
 void GridMap::cloudTFCB( const sensor_msgs::PointCloud2ConstPtr &msg_pc) 
@@ -293,7 +291,7 @@ void GridMap::cloudTFCB( const sensor_msgs::PointCloud2ConstPtr &msg_pc)
 
   pcdMsgToMap(*msg_pc);
 
-  md_.last_sensor_msg_time = ros::Time::now().toSec();
+  md_.last_pose_msg_time = ros::Time::now().toSec();
 }
 
 /* Gridmap conversion methods */
@@ -405,6 +403,7 @@ void GridMap::getCamToGlobalPose(const geometry_msgs::Pose &pose)
   md_.cam2origin_ = md_.body2origin_ * md_.cam2body_;
 
   md_.has_pose_ = true;
+  md_.last_pose_msg_time = ros::Time::now().toSec();
 
 }
 
@@ -463,8 +462,8 @@ bool GridMap::isPoseValid() {
     return false;
   }
 
-  if (isTimeout(md_.last_sensor_msg_time, 0.25)){
-    ROS_ERROR_THROTTLE(1.0, "[%s] Sensor message timeout exceeded 0.25s: (%f, %f)", node_name_.c_str(), md_.last_sensor_msg_time, ros::Time::now().toSec());
+  if (isTimeout(md_.last_pose_msg_time, 0.25)){
+    ROS_ERROR_THROTTLE(1.0, "[%s] Sensor message timeout exceeded 0.25s: (%f, %f)", node_name_.c_str(), md_.last_pose_msg_time, ros::Time::now().toSec());
     return false;
   }
 

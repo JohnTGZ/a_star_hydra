@@ -8,6 +8,9 @@ front_end:
 
 ##### Mapping params
 grid_map:
+  debug_input_entire_map: false
+  pose_type: 1
+  
   global_map:
     size_x: 50.0
     size_y: 50.0

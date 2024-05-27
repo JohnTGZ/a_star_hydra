@@ -109,9 +109,8 @@ struct MappingData
   // True if pose has been received
   bool has_pose_{false};
 
-  // TODO: Use this to flag timeout
-  // True if depth and odom has timed out
-  double last_sensor_msg_time{-1.0};
+  // True if pose has timed out
+  double last_pose_msg_time{-1.0};
 
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };

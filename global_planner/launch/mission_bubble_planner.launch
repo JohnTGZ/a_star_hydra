@@ -3,11 +3,17 @@
   <node pkg="global_planner" name="global_planner" type="hydra_front_end" output="screen" >
     <rosparam command="load" file="$(find global_planner)/config/hydra_front_end.yaml" />
     <!-- input topics -->
-    <remap from="/grid_map/pose" to="/drone0/mavros/local_position/pose"/>
-    <remap from="/grid_map/cloud" to="/drone0/camera/depth/points"/>
+    <remap from="/grid_map/pose" to="/grid_map/pose"/>
+    <remap from="/grid_map/cloud" to="/grid_map/cloud"/>
     <!-- output topics -->
     <remap from="/grid_map/occupancy" to="/grid_map/occupancy"/>
     <remap from="/plan_viz" to="/plan_viz"/>
   </node>
+
+  <!-- Test script sending pose and cloud -->
+  <node pkg="global_planner" name="testsendposecloud" type="testsendposecloud" output="screen" />
+
+  <node name="rviz" pkg="rviz" type="rviz" required="true" 
+    args="-d $(find global_planner)/rviz/default.rviz" />
 
 </launch>

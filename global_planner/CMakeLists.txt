@@ -65,3 +65,13 @@ target_link_libraries(hydra_front_end
   ${catkin_LIBRARIES}
   global_planner
 )
+
+
+add_executable(testsendposecloud
+  src/testsendposecloud.cpp 
+)
+
+target_link_libraries(testsendposecloud 
+  ${catkin_LIBRARIES}
+  global_planner
+)
